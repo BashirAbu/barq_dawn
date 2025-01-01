@@ -215,14 +215,14 @@ wgpu::Status AdapterBase::APIGetInfo(AdapterInfo* info) const {
     size_t allocSize = mPhysicalDevice->GetVendorName().length() +
                        mPhysicalDevice->GetArchitectureName().length() +
                        mPhysicalDevice->GetName().length() +
-                       mPhysicalDevice->GetDriverDescription().length() + 4;//count for null terminators.
+                       mPhysicalDevice->GetDriverDescription().length();//count for null terminators.
     absl::Span<char> outBuffer{new char[allocSize], allocSize};
 
     auto AddString = [&](const std::string& in, StringView* out) {
         DAWN_ASSERT(in.length() <= outBuffer.length());
         strcpy(outBuffer.data(), in.c_str());
         *out = {outBuffer.data(), in.length()};
-        outBuffer = outBuffer.subspan(in.length() + 1);
+        outBuffer = outBuffer.subspan(in.length());
     };
 
     AddString(mPhysicalDevice->GetVendorName(), &info->vendor);
